@@ -18,23 +18,77 @@ Logically a user may want to resize a panel but this really translates to resizi
 
 The panel resize methods are repeats of the same resize methods found on the group.
 
+### Setting Initial Size
+
+When adding a panel, you can specify `initialWidth` and `initialHeight` to set the desired initial dimensions. The dock will make a best attempt to honor these values, but it may not always be possible due to the constraints of the grid layout.
+
+```ts
+api.addPanel({
+    id: 'panel_1',
+    component: 'default',
+    title: 'Panel 1',
+    initialWidth: 300,
+    initialHeight: 200,
+});
+```
+
+:::info
+Initial sizes are applied **when the panel is created**. The dock attempts to size the group containing the panel to match these dimensions, but grid constraints may prevent exact sizing.
+:::
+
+### Dynamically Resizing Panels
+
+After a panel has been created, you can resize it (or rather, its containing group) using the `setSize()` method. You can call this method on either the panel API or the group API - both achieve the same result.
+
 ```tsx
-// it's mandatory to provide either a height or a width, providing both is optional
+// Resize using panel API (recommended for cleaner syntax)
 props.api.setSize({
     height: 100,
     width: 200,
 });
 
-/**
- * you could also resize the panels group, although not recommended due to the
- * clunky syntax it does achieve the same result
- */
+// Resize using group API (same result, more verbose)
 props.api.group.api.setSize({
     height: 100,
     width: 200,
 });
 ```
 
-You can see an example invoking both approaches below.
+:::note
+- You must provide either `height` or `width`, or both
+- Since panels exist within groups, resizing a panel actually resizes the entire group
+- Grid constraints may prevent the group from reaching the exact specified size
+:::
+
+### Plain JavaScript Example
+
+Here's a complete example showing how to create panels with initial sizes and dynamically resize them using plain TypeScript/JavaScript:
+
+```ts
+import { createDockview } from 'dockview-core';
+
+const api = createDockview(document.getElementById('app'), {
+    // ... configuration
+});
+
+// Add panel with initial size
+const panel = api.addPanel({
+    id: 'panel_1',
+    component: 'default',
+    title: 'Panel 1',
+    initialWidth: 300,
+    initialHeight: 200,
+});
+
+// Later, dynamically resize the panel
+panel.api.setSize({ width: 400, height: 250 });
+
+// Or resize via the group API
+panel.api.group.api.setSize({ width: 500 });
+```
+
+### Interactive Example
+
+You can see a working example with interactive controls below. Try using the input fields and buttons to resize panels dynamically:
 
 <CodeRunner id="dockview/resize"/>
