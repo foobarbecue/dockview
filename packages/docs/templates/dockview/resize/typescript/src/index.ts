@@ -73,12 +73,6 @@ class ResizePanel implements IContentRenderer {
         heightControl.append(heightLabel, this.heightInput, resizeHeightGroupBtn, resizeHeightPanelBtn);
 
         this._element.append(this.titleElement, widthControl, heightControl);
-
-        // Store button references for event listeners
-        this._element.dataset.widthGroupBtn = '0';
-        this._element.dataset.widthPanelBtn = '1';
-        this._element.dataset.heightGroupBtn = '2';
-        this._element.dataset.heightPanelBtn = '3';
     }
 
     init(parameters: GroupPanelPartInitParameters): void {
@@ -167,14 +161,21 @@ api.addPanel({
     initialHeight: 180,
 });
 
+// Add panels without initial size to the same group as panel_1
 api.addPanel({
     id: 'panel_4',
     component: 'default',
     title: 'Panel 4 (No Initial Size)',
+    position: {
+        referencePanel: 'panel_1',
+    },
 });
 
 api.addPanel({
     id: 'panel_5',
     component: 'default',
     title: 'Panel 5 (No Initial Size)',
+    position: {
+        referencePanel: 'panel_1',
+    },
 });
